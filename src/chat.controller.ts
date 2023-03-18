@@ -1,10 +1,13 @@
-import { Controller, Post, Body } from '@nestjs/common';
-import { firstValueFrom, Observable } from 'rxjs';
+import { Controller, Post, Body, Header, Res } from '@nestjs/common';
+import { firstValueFrom } from 'rxjs';
+import { HttpService } from '@nestjs/axios';
+
 import { ChatService } from './chat.service';
 
 @Controller('chat')
 export class ChatController {
   constructor(private readonly chatService: ChatService) {}
+  // constructor(private readonly httpService: HttpService) {}
 
   // @Post()
   // chat(
@@ -14,14 +17,16 @@ export class ChatController {
   // }
 
   @Post()
+  @Header('Content-type', 'application/octet-stream')
   async chat(
     @Body() payload: { messages: { role: string; content: string }[] },
+    @Res() res,
   ): Promise<any> {
     console.log('message--', payload.messages);
 
     try {
-      const result = await this.chatService.getCompletions(payload.messages);
-      return firstValueFrom(result);
+      const stream = await this.chatService.getCompletions(payload.messages);
+      stream.pipe(res);
     } catch (error) {
       const message = error.message || 'Unknown error';
       const status = error.status || 500;

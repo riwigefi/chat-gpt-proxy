@@ -4,6 +4,10 @@ import { AxiosResponse } from 'axios';
 
 import { Observable, throwError } from 'rxjs';
 
+import { EventEmitter } from 'events';
+
+import { Writable } from 'stream';
+
 import { map, catchError } from 'rxjs/operators';
 
 @Injectable()
@@ -35,7 +39,7 @@ export class ChatService {
     console.log('apiKey--', apiKey);
     const url = `https://api.openai.com/v1/chat/completions`;
     const headers = {
-      Authorization: `Bear ${apiKey}`,
+      Authorization: `Bearer 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`,
       'Content-Type': 'application/json',
     };
     const data = {
@@ -52,7 +56,7 @@ export class ChatService {
         return response.data;
       }),
       catchError((error) => {
-        console.log('服务器错误--', error);
+        console.log('服务器错误--', error.response?.data);
         const message = error.response?.data?.message || 'Something went wrong';
         return throwError(() => new Error(message));
       }),
