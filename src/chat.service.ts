@@ -2,7 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { AxiosResponse } from 'axios';
 
-import { map } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
+
+import { map, catchError } from 'rxjs/operators';
 
 @Injectable()
 export class ChatService {
@@ -21,8 +23,12 @@ export class ChatService {
     return key;
   }
 
-  async getCompletions(messages: { role: string; content: string }[]) {
+  async getCompletions(
+    messages: { role: string; content: string }[],
+  ): Promise<Observable<any>> {
     const apiKey = this.getNextApiKey();
+
+    console.log('客户端发来的字符串--', JSON.stringify(messages));
 
     console.log('this.apiKeys', this.apiKeys);
 
@@ -44,6 +50,10 @@ export class ChatService {
       map((response: AxiosResponse) => {
         console.log('响应--', response.data);
         return response.data;
+      }),
+      catchError((error) => {
+        const message = error.response?.data?.message || 'Something went wrong';
+        return throwError(() => new Error(message));
       }),
     );
   }
