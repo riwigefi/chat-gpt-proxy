@@ -29,7 +29,7 @@ export class ChatService {
     console.log('apiKey--', apiKey);
     const url = `https://api.openai.com/v1/chat/completions`;
     const headers = {
-      Authorization: `Bear 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`,
+      Authorization: `Bear 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`,
       'Content-Type': 'application/json',
     };
     const data = {
@@ -40,8 +40,11 @@ export class ChatService {
     };
     const requestOptions = { headers };
 
-    return this.httpService
-      .post(url, data, requestOptions)
-      .pipe(map((response: AxiosResponse) => response.data));
+    return this.httpService.post(url, data, requestOptions).pipe(
+      map((response: AxiosResponse) => {
+        console.log('响应--', response.data);
+        return response.data;
+      }),
+    );
   }
 }
