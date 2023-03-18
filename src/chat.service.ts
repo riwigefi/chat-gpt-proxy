@@ -35,7 +35,7 @@ export class ChatService {
     console.log('apiKey--', apiKey);
     const url = `https://api.openai.com/v1/chat/completions`;
     const headers = {
-      Authorization: `Bear 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`,
+      Authorization: `Bear ${apiKey}`,
       'Content-Type': 'application/json',
     };
     const data = {
