@@ -23,9 +23,13 @@ export class ChatService {
 
   async getCompletions(messages: { role: string; content: string }[]) {
     const apiKey = this.getNextApiKey();
+
+    console.log('this.apiKeys', this.apiKeys);
+
+    console.log('apiKey--', apiKey);
     const url = `https://api.openai.com/v1/chat/completions`;
     const headers = {
-      Authorization: `Bear ${apiKey}`,
+      Authorization: `Bear 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`,
       'Content-Type': 'application/json',
     };
     const data = {
