@@ -46,15 +46,17 @@ export class ChatService {
     };
     const requestOptions = { headers };
 
-    return this.httpService.post(url, data, requestOptions).pipe(
+    const res = await this.httpService.post(url, data, requestOptions).pipe(
       map((response: AxiosResponse) => {
         console.log('响应--', response.data);
         return response.data;
       }),
       catchError((error) => {
+        console.log('服务器错误--', error);
         const message = error.response?.data?.message || 'Something went wrong';
         return throwError(() => new Error(message));
       }),
     );
+    return res;
   }
 }
